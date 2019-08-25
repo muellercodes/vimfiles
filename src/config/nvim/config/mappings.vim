@@ -1,14 +1,6 @@
 " Mappings
 " ========
 
-" `%` is an essential key mapping: it lets you bounce between the start and end
-" of `if` statements, loops, blocks in Ruby, etc. This mapping is provided by
-" the [`matchit`][matchit] plugin, which we have to enable:
-"
-" [matchit]: https://neovim.io/doc/user/pi_matchit.html
-
-runtime! macros/matchit.vim
-
 " `,ep` lets us **e**dit the list of **p**lugins:
 
 nmap <Leader>ep :tabe ~/.config/nvim/plugins.vim<CR>
@@ -126,12 +118,25 @@ nmap <Leader>ef :ll 1<CR>
 vmap <Leader>sym :s/\v["']([^"']+)["'] \=\> /\1: /g<CR>:nohls<CR>
 vmap <Leader>str :s/\v%(:([^:]+) \=\>\|([^[:space:]:]+): )/'\1\2' => /g<CR>:nohls<CR>
 
+" When running tests, it's helpful to know the path of the test file you're
+" working on so you can feed it to `rspec`. `,cp` will copy the path to the
+" clipboard so you can paste it in another terminal window:
+nmap <Leader>cp :let @* = expand("%")<CR>
+
+" Since we've modified the `syn sync` command to start from 256 lines up from
+" the current line by default (see optimizations.vim), sometimes this messes
+" causes highlighting to get messed up, so we give ourselves a way to
+" reset highlighting for the whole file:
+nmap <Leader>sr :syntax sync fromstart
+
 " Finally, when modifying a colorscheme, sometimes it's helpful to know which
 " syntax group the cursor sits within. `,syn` lets us do this
 " ([source][identify-syntax-group]):
 "
 " [identify-syntax-group]: http://vim.wikia.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
 
-map <Leader>syn :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+map <Leader>si :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
+nmap <Leader>w :wa<CR>
